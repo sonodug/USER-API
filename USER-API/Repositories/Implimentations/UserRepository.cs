@@ -1,43 +1,47 @@
+using Microsoft.EntityFrameworkCore;
 using USER_API.Context;
 using USER_API.Models;
 using USER_API.Repositories.Interfaces;
 
 namespace USER_API.Repositories.Implimentations;
 
-public class UserRepository : IUserRepository
+public class UserRepository : BaseRepository, IUserRepository
 {
-    private readonly DatabaseContext _context;
+    public UserRepository(DatabaseContext context) : base(context)
+    {
+        
+    }
     
-    public IEnumerable<User> GetUsers()
+    public async Task<IEnumerable<User>> GetUsers()
     {
-        return _context.Users;
+        
+        return await _context.Users.ToListAsync();
     }
 
-    public User GetUser(Guid id)
+    public async Task<User> GetUser(Guid id)
     {
-        return _context.Users.FirstOrDefault(u => u.Id.Equals(id));
+        return await _context.Users.FirstOrDefaultAsync(u => u.Id.Equals(id));
     }
 
-    public User CreateUser(User user)
+    public async Task<User> CreateUser(User user)
     {
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
         return user;
     }
 
-    public User UpdateUser(User user)
+    public async Task<User?> UpdateUser(User user)
     {
         var userToUpdate = _context.Users.FirstOrDefault(u => u.Id.Equals(user.Id));
+
         if (userToUpdate != null)
-        {
             _context.Update(userToUpdate);
-        }
-        
-        _context.SaveChanges();
+
+        await _context.SaveChangesAsync();
         return userToUpdate;
     }
 
-    public void DeleteUser(User user)
+    public async Task DeleteUser(User user)
     {
         var userToDelete = _context.Users.FirstOrDefault(u => u.Id == user.Id);
         if (userToDelete != null)
@@ -45,6 +49,6 @@ public class UserRepository : IUserRepository
             userToDelete.UserState.Code = "Blocked";
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

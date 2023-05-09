@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace USER_API.Models;
 
-public partial class UserGroup : BaseModel
+public partial class UserGroup
 {
     public int Id { get; set; }
 

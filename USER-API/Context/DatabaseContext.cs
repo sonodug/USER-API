@@ -24,7 +24,7 @@ public partial class DatabaseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=auth;User Id=postgres;Password=22road22");
+        => optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=auth;User Id=postgres;Password=22road22;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,9 +36,7 @@ public partial class DatabaseContext : DbContext
 
             entity.HasIndex(e => e.Login, "user_login_key").IsUnique();
 
-            entity.Property(e => e.Id)
-                .HasDefaultValueSql("gen_random_uuid()")
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedDate)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")

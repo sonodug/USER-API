@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace USER_API.Models;
 
-public partial class User : BaseModel
+public partial class User
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     public string Login { get; set; } = null!;
 
