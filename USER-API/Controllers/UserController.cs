@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using USER_API.Extensions;
 using USER_API.Models;
 using USER_API.Repositories.Interfaces;
 using USER_API.Resources;
@@ -23,26 +24,32 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<UserResource>> GetAllAsync()
     {
-        var users = await _userService.ListAsync();
+        var users = await _userService.GetAsync();
         var resources = _mapper.Map<IEnumerable<User>, IEnumerable<UserResource>>(users);
         return resources;
     }
     
-    // [HttpGet("{id}")]
-    // public async Task<User> Get(int id)
-    // {
-    //     return await _users.GetUser(id);
-    // }
-
-    /*[HttpPost]
-    public async Task<User> Post(User user)
+    [HttpGet("{id}")]
+    public async Task<UserResource> Get(int id)
     {
-        return await _users.CreateUser(user);
+        var user = await _userService.GetByIdAsync(id);
+        var resource = _mapper.Map<User, UserResource>(user);
+        return resource;
     }
-    
-    [HttpPut]
-    public async Task<User> Put(User user)
+
+    [HttpPost]
+    public async Task<IActionResult> PostAsync([FromBody] RegisterUserResource resource)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState.GetErrorMessages());
+
+        var user = _mapper.Map<RegisterUserResource, User>(resource);
+        var result = await _userService.RegisterAsync(user, resource.IsAdmin);
+
+        if (!result.Succes)
+            return BadRequest(result.Message);
         
-    }*/
+        var userResource = _mapper.Map<User, UserResource>(result.User);
+        return Ok(userResource);
+    }
 }

@@ -28,22 +28,23 @@ public class UserRepository : BaseRepository, IUserRepository
             .FirstOrDefaultAsync(u => u.Id.Equals(id));
     }
 
-    public async Task<User> CreateUser(User user)
+    public async Task CreateUser(User user, bool isAdmin = false)
     {
+        if (isAdmin)
+            user.UserGroup = _context.UserGroups.FirstOrDefault(u => u.Code == "Admin");
+        else
+            user.UserGroup = _context.UserGroups.FirstOrDefault(u => u.Code == "User");
+        
+        user.CreatedDate = DateTime.Now;
+        user.UserState = _context.UserStates.FirstOrDefault(u => u.Code == "Active");
+        user.UserGroupId = user.UserGroup.Id;
+        user.UserStateId = user.UserState.Id;
+        user.UserState.Users.Add(user);
+        user.UserGroup.Users.Add(user);
+        
         await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
-        return user;
-    }
-
-    public async Task<User?> UpdateUser(User user)
-    {
-        var userToUpdate = _context.Users.FirstOrDefault(u => u.Id.Equals(user.Id));
-
-        if (userToUpdate != null)
-            _context.Update(userToUpdate);
-
-        await _context.SaveChangesAsync();
-        return userToUpdate;
+        
+        //await _context.SaveChangesAsync();
     }
 
     public async Task DeleteUser(User user)
