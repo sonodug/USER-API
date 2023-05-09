@@ -49,16 +49,6 @@ public partial class DatabaseContext : DbContext
                 .HasColumnName("password");
             entity.Property(e => e.UserGroupId).HasColumnName("user_group_id");
             entity.Property(e => e.UserStateId).HasColumnName("user_state_id");
-
-            entity.HasOne(d => d.UserGroup).WithMany(p => p.Users)
-                .HasForeignKey(d => d.UserGroupId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("user_user_group_id_fkey");
-
-            entity.HasOne(d => d.UserState).WithMany(p => p.Users)
-                .HasForeignKey(d => d.UserStateId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("user_user_state_id_fkey");
         });
 
         modelBuilder.Entity<UserGroup>(entity =>
@@ -74,6 +64,9 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(100)
                 .HasColumnName("description");
+            
+            entity.HasMany(u => u.Users).WithOne(u => u.UserGroup)
+                .HasForeignKey(p => p.UserGroupId);
         });
 
         modelBuilder.Entity<UserState>(entity =>
@@ -89,6 +82,9 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(100)
                 .HasColumnName("description");
+            
+            entity.HasMany(u => u.Users).WithOne(u => u.UserState)
+                .HasForeignKey(p => p.UserStateId);
         });
 
         OnModelCreatingPartial(modelBuilder);

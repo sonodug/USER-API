@@ -53,3 +53,9 @@ C:\Users\maks_\RiderProjects\USER-API\USER-API\obj\Debug\net7.0\USER-API.genrunt
 C:\Users\maks_\RiderProjects\USER-API\USER-API\obj\Debug\net7.0\ref\USER-API.dll
 C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\Npgsql.dll
 C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\AutoMapper.dll
+C:\Users\maks_\RiderProjects\USER-API\USER-API\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

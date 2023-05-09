@@ -14,13 +14,18 @@ public class UserRepository : BaseRepository, IUserRepository
     
     public async Task<IEnumerable<User>> GetUsers()
     {
-        
-        return await _context.Users.ToListAsync();
+        return await _context.Users
+            .Include(g => g.UserGroup)
+            .Include(s => s.UserState)
+            .ToListAsync();
     }
 
-    public async Task<User> GetUser(Guid id)
+    public async Task<User> GetUser(int id)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Id.Equals(id));
+        return await _context.Users
+            .Include(g => g.UserGroup)
+            .Include(s => s.UserState)
+            .FirstOrDefaultAsync(u => u.Id.Equals(id));
     }
 
     public async Task<User> CreateUser(User user)

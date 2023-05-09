@@ -1,6 +1,9 @@
-/*using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using USER_API.Models;
 using USER_API.Repositories.Interfaces;
+using USER_API.Resources;
+using USER_API.Services;
 
 namespace USER_API.Controllers;
 
@@ -8,26 +11,30 @@ namespace USER_API.Controllers;
 [Route("/api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IUserRepository _users;
+    private readonly IUserService _userService;
+    private readonly IMapper _mapper;
 
-    public UserController(IUserRepository users)
+    public UserController(IUserService userService, IMapper mapper)
     {
-        _users = users;
+        _userService = userService;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<IEnumerable<UserResource>> GetAllAsync()
     {
-        return await _users.GetUsers();
+        var users = await _userService.ListAsync();
+        var resources = _mapper.Map<IEnumerable<User>, IEnumerable<UserResource>>(users);
+        return resources;
     }
     
-    [HttpGet("{id}")]
-    public async Task<User> Get(Guid id)
-    {
-        return await _users.GetUser(id);
-    }
+    // [HttpGet("{id}")]
+    // public async Task<User> Get(int id)
+    // {
+    //     return await _users.GetUser(id);
+    // }
 
-    [HttpPost]
+    /*[HttpPost]
     public async Task<User> Post(User user)
     {
         return await _users.CreateUser(user);
@@ -37,5 +44,5 @@ public class UserController : ControllerBase
     public async Task<User> Put(User user)
     {
         
-    }
-}*/
+    }*/
+}
