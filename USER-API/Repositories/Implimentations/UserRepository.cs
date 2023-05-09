@@ -20,7 +20,7 @@ public class UserRepository : BaseRepository, IUserRepository
             .ToListAsync();
     }
 
-    public async Task<User> GetUser(int id)
+    public async Task<User> GetUserById(int id)
     {
         return await _context.Users
             .Include(g => g.UserGroup)
@@ -43,18 +43,11 @@ public class UserRepository : BaseRepository, IUserRepository
         user.UserGroup.Users.Add(user);
         
         await _context.Users.AddAsync(user);
-        
-        //await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteUser(User user)
+    public void BlockUser(User user)
     {
-        var userToDelete = _context.Users.FirstOrDefault(u => u.Id == user.Id);
-        if (userToDelete != null)
-        {
-            userToDelete.UserState.Code = "Blocked";
-        }
-
-        await _context.SaveChangesAsync();
+        user.UserState = _context.UserStates.FirstOrDefault(u => u.Code == "Blocked");
+        _context.Users.Update(user);
     }
 }

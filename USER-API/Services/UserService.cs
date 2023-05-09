@@ -24,21 +24,41 @@ public class UserService : IUserService
 
     public async Task<User> GetByIdAsync(int id)
     {
-        return await _userRepository.GetUser(id);
+        return await _userRepository.GetUserById(id);
     }
 
-    public async Task<RegisterUserResponse> RegisterAsync(User user, bool isAdmin = false)
+    public async Task<ControlUserResponse> RegisterAsync(User user, bool isAdmin = false)
     {
         try
         {
             await _userRepository.CreateUser(user, isAdmin);
             await _unitOfWork.CompleteAsync();
-            return new RegisterUserResponse(user);
+            return new ControlUserResponse(user);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new RegisterUserResponse($"An error occurred when creating the user: {ex.InnerException.Message}");
+            return new ControlUserResponse($"An error occurred when creating the user: {ex.Message} {ex.InnerException.Message}");
+        }
+    }
+    
+    public async Task<ControlUserResponse> BlockAsync(int id)
+    {
+        var registeredUser = await _userRepository.GetUserById(id);
+
+        if (registeredUser == null)
+            return new ControlUserResponse("User not found.");
+
+        try
+        {
+            _userRepository.BlockUser(registeredUser);
+            await _unitOfWork.CompleteAsync();
+
+            return new ControlUserResponse(registeredUser);
+        }
+        catch (Exception ex)
+        {
+            return new ControlUserResponse($"An error occurred when deleting the user: {ex.Message}, {ex.InnerException}");
         }
     }
 }

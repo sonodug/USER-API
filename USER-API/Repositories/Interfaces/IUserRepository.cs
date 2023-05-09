@@ -5,7 +5,7 @@ namespace USER_API.Repositories.Interfaces;
 public interface IUserRepository
 {
     public Task<IEnumerable<User>> GetUsers();
-    public Task<User> GetUser(int id);
+    public Task<User> GetUserById(int id);
     public Task CreateUser(User user, bool isAdmin);
-    public Task DeleteUser(User user);
+    public void BlockUser(User user);
 }

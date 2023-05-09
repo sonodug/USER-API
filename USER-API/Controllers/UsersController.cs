@@ -10,12 +10,12 @@ namespace USER_API.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class UserController : ControllerBase
+public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
 
-    public UserController(IUserService userService, IMapper mapper)
+    public UsersController(IUserService userService, IMapper mapper)
     {
         _userService = userService;
         _mapper = mapper;
@@ -49,6 +49,18 @@ public class UserController : ControllerBase
         if (!result.Succes)
             return BadRequest(result.Message);
         
+        var userResource = _mapper.Map<User, UserResource>(result.User);
+        return Ok(userResource);
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        var result = await _userService.BlockAsync(id);
+
+        if (!result.Succes)
+            return BadRequest(result.Message);
+
         var userResource = _mapper.Map<User, UserResource>(result.User);
         return Ok(userResource);
     }

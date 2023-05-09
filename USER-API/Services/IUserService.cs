@@ -8,5 +8,6 @@ public interface IUserService
 {
     Task<IEnumerable<User>> GetAsync();
     Task<User> GetByIdAsync(int id);
-    Task<RegisterUserResponse> RegisterAsync(User user, bool isAdmin);
+    Task<ControlUserResponse> RegisterAsync(User user, bool isAdmin);
+    Task<ControlUserResponse> BlockAsync(int id);
 }
