@@ -44,13 +44,14 @@ public class UsersController : ControllerBase
             return BadRequest(ModelState.GetErrorMessages());
 
         var user = _mapper.Map<RegisterUserResource, User>(resource);
-        var result = await _userService.RegisterAsync(user, resource.IsAdmin);
+        var resultResponse = await _userService.RegisterAsync(user, resource.IsAdmin);
 
-        if (!result.Succes)
-            return BadRequest(result.Message);
+        if (!resultResponse.Succes)
+            return BadRequest(resultResponse.Message);
         
-        var userResource = _mapper.Map<User, UserResource>(result.User);
-        return Ok(userResource);
+        var userResource = _mapper.Map<User, UserResource>(resultResponse.User);
+        var uri = "id/" + user.Id;
+        return Created(uri, userResource);
     }
     
     [HttpDelete("{id}")]
