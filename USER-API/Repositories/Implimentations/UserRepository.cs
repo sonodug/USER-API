@@ -27,6 +27,11 @@ public class UserRepository : BaseRepository, IUserRepository
             .Include(s => s.UserState)
             .FirstOrDefaultAsync(u => u.Id.Equals(id));
     }
+    
+    public async Task<User> GetUserByLogin(string login)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Login.Equals(login));
+    }
 
     public async Task CreateUser(User user, bool isAdmin = false)
     {

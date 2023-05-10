@@ -15,7 +15,8 @@ public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
-
+    private static readonly object _lock = new object();
+    
     public UsersController(IUserService userService, IMapper mapper)
     {
         _userService = userService;
@@ -45,11 +46,17 @@ public class UsersController : ControllerBase
             return BadRequest(ModelState.GetErrorMessages());
 
         var user = _mapper.Map<RegisterUserResource, User>(resource);
+        
+        var existingUser = await _userService.GetByLoginAsync(user.Login);
+        
+        if (existingUser != null)
+            return BadRequest("User with this login already exists");
+        
         var resultResponse = await _userService.RegisterAsync(user, resource.IsAdmin);
-
         if (!resultResponse.Succes)
             return BadRequest(resultResponse.Message);
         
+        await Task.Delay(5000);
         var userResource = _mapper.Map<User, UserResource>(resultResponse.User);
         var uri = "id/" + user.Id;
         return Created(uri, userResource);
