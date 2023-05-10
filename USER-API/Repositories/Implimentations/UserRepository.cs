@@ -45,9 +45,20 @@ public class UserRepository : BaseRepository, IUserRepository
         await _context.Users.AddAsync(user);
     }
 
+    public async Task<string> CheckCredentials(string login, string password)
+    {
+        if(await Task.FromResult(_context.Users.SingleOrDefault(x => x.Login == login && x.Password == password)) != null)
+        {
+            return _context.Users.Include(s => s.UserState).SingleOrDefault(x => x.Login == login && x.Password == password).UserState.Code;
+        }
+        
+        return "None";
+    }
+    
     public void BlockUser(User user)
     {
         user.UserState = _context.UserStates.FirstOrDefault(u => u.Code == "Blocked");
         _context.Users.Update(user);
     }
+
 }

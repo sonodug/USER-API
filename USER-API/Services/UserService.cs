@@ -61,4 +61,9 @@ public class UserService : IUserService
             return new ControlUserResponse($"An error occurred when deleting the user: {ex.Message}, {ex.InnerException}");
         }
     }
+
+    public async Task<string> Authenticate(string login, string password)
+    {
+        return await _userRepository.CheckCredentials(login, password);
+    }
 }

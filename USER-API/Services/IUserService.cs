@@ -10,4 +10,5 @@ public interface IUserService
     Task<User> GetByIdAsync(int id);
     Task<ControlUserResponse> RegisterAsync(User user, bool isAdmin);
     Task<ControlUserResponse> BlockAsync(int id);
+    Task<string> Authenticate(string login, string password);
 }

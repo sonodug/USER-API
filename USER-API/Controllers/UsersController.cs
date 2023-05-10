@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using USER_API.Extensions;
 using USER_API.Models;
@@ -22,7 +23,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<UserResource>> GetAllAsync()
+    public async Task<IEnumerable<UserResource>> GetAll()
     {
         var users = await _userService.GetAsync();
         var resources = _mapper.Map<IEnumerable<User>, IEnumerable<UserResource>>(users);
@@ -64,5 +65,13 @@ public class UsersController : ControllerBase
 
         var userResource = _mapper.Map<User, UserResource>(result.User);
         return Ok(userResource);
+    }
+    
+    [Authorize]
+    [Route("/api/[controller]/auth")]
+    [HttpGet]
+    public async Task<IActionResult> Authenticate()
+    {
+        return Ok();
     }
 }
