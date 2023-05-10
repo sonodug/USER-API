@@ -27,7 +27,7 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IEnumerable<UserAuxiliary>> GetByParams([FromQuery] PaginationParameters parameters)
+    public async Task<IEnumerable<UserAuxiliary>> GetByParamsAsync([FromQuery] PaginationParameters parameters)
     {
         var users = await _userService.GetAsync(parameters);
         var resources = _mapper.Map<IEnumerable<User>, IEnumerable<UserAuxiliary>>(users);
@@ -47,7 +47,7 @@ public class UsersController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<UserAuxiliary> Get(int id)
+    public async Task<UserAuxiliary> GetAsync(int id)
     {
         var user = await _userService.GetByIdAsync(id);
         var resource = _mapper.Map<User, UserAuxiliary>(user);
@@ -89,10 +89,10 @@ public class UsersController : ControllerBase
         return Ok(userResource);
     }
     
-    [Route("/api/[controller]/auth")]
     [Authorize]
+    [Route("/api/[controller]/auth")]
     [HttpGet]
-    public async Task<IActionResult> Authenticate()
+    public async Task<IActionResult> AuthenticateAsync()
     {
         return Ok();
     }
