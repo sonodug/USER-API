@@ -1,6 +1,6 @@
-namespace USER_API.Resources;
+namespace USER_API.AuxiliaryModels;
 
-public class UserResource
+public class UserAuxiliary
 {
     public int Id { get; set; }
 
@@ -9,6 +9,6 @@ public class UserResource
     public string Password { get; set; } = null!;
 
     public DateTime CreatedDate { get; set; }
-    public UserGroupResource UserGroup { get; set; }
-    public UserStateResource UserState { get; set; }
+    public UserGroupaAxiliary UserGroup { get; set; }
+    public UserStateAuxiliary UserState { get; set; }
 }

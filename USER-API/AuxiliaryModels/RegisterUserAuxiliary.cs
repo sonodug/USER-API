@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace USER_API.Resources;
+namespace USER_API.AuxiliaryModels;
 
-public class RegisterUserResource
+public class RegisterUserAuxiliary
 {
     [Required]
     public string Login { get; set; }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using USER_API.Context;
 using USER_API.Models;
+using USER_API.Pagination;
 using USER_API.Repositories.Interfaces;
 
 namespace USER_API.Repositories.Implimentations;
@@ -12,12 +13,16 @@ public class UserRepository : BaseRepository, IUserRepository
         
     }
     
-    public async Task<IEnumerable<User>> GetUsers()
+    public async Task<PagedList<User>> GetUsers(PaginationParameters parameters)
     {
-        return await _context.Users
+        var users = await _context.Users
             .Include(g => g.UserGroup)
             .Include(s => s.UserState)
             .ToListAsync();
+
+        var usersWithParams = new PagedList<User>(users, users.Count, parameters.PageNumber, parameters.PageSize);
+
+        return usersWithParams;
     }
 
     public async Task<User> GetUserById(int id)

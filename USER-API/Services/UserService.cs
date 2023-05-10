@@ -1,7 +1,9 @@
 using USER_API.Models;
+using USER_API.Pagination;
 using USER_API.Repositories;
 using USER_API.Repositories.Interfaces;
-using USER_API.Resources;
+using USER_API.Repositories.Implimentations;
+using USER_API.AuxiliaryModels;
 using USER_API.Services.Communication;
 
 namespace USER_API.Services;
@@ -9,17 +11,17 @@ namespace USER_API.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IProcessUnit _processUnit;
 
-    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
+    public UserService(IUserRepository userRepository, IProcessUnit processUnit)
     {
         _userRepository = userRepository;
-        _unitOfWork = unitOfWork;
+        _processUnit = processUnit;
     }
     
-    public async Task<IEnumerable<User>> GetAsync()
+    public async Task<PagedList<User>> GetAsync(PaginationParameters parameters)
     {
-        return await _userRepository.GetUsers();
+        return await _userRepository.GetUsers(parameters);
     }
 
     public async Task<User> GetByLoginAsync(string login)
@@ -37,7 +39,7 @@ public class UserService : IUserService
         try
         {
             await _userRepository.CreateUser(user, isAdmin);
-            await _unitOfWork.CompleteAsync();
+            await _processUnit.CompleteAsync();
             return new ControlUserResponse(user);
         }
         catch (Exception ex)
@@ -57,7 +59,7 @@ public class UserService : IUserService
         try
         {
             _userRepository.BlockUser(registeredUser);
-            await _unitOfWork.CompleteAsync();
+            await _processUnit.CompleteAsync();
 
             return new ControlUserResponse(registeredUser);
         }

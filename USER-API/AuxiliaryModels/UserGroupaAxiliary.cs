@@ -1,6 +1,6 @@
-namespace USER_API.Resources;
+namespace USER_API.AuxiliaryModels;
 
-public class UserStateResource
+public class UserGroupaAxiliary
 {
     public int Id { get; set; }
 
